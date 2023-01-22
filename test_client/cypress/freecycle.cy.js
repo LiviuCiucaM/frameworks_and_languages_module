@@ -7,7 +7,7 @@ describe('FreeCycle', () => {
 
 	// FreeCycle Commands ------------------------------------------------------
 	Cypress.Commands.add('item_field_entry', (kwargs) => {
-		for (let [k,v] of Object.entries(kwargs)) {
+		for (let [k, v] of Object.entries(kwargs)) {
 			cy.get(`[name="${k}"]`).filter(':visible').clear().type(v)
 		}
 	})
@@ -16,7 +16,7 @@ describe('FreeCycle', () => {
 		const uuid = Cypress._.random(0, 1e6);
 		kwargs = {
 			...{
-				user_id: 'test_user',   // HACK - Simplify Client
+				user_id: 'test_user', // HACK - Simplify Client
 				lat: '1',
 				lon: '1',
 				description: 'item from cypress test',
@@ -40,17 +40,18 @@ describe('FreeCycle', () => {
 	// Each --------------------------------------------------------------------
 
 	beforeEach(() => {
-		cy.visit('');  // Navigate to Env variable `CYPRESS_BASE_URL`
+		cy.visit('http://localhost:8001/?api=http://localhost:8000'); // Navigate to Env variable `CYPRESS_BASE_URL`
 	})
 
 	// Tests -------------------------------------------------------------------
 
 
-	it('root page loads without error', () => {
-	})
+	it('root page loads without error', () => {})
 
 	it('root page contains text freecycle', () => {
-		cy.contains('freecycle', { matchCase: false })
+		cy.contains('freecycle', {
+			matchCase: false
+		})
 	})
 
 	it('contains input fields and submit button', () => {

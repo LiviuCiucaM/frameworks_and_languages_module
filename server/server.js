@@ -1,4 +1,7 @@
-const { json, response } = require('express')
+const {
+  json,
+  response
+} = require('express')
 const express = require('express')
 const app = express()
 const port = 8000
@@ -8,14 +11,16 @@ app.use(express.json())
 
 // access req.body directly as a object
 app.use(bodyParser.json()) //https://stackoverflow.com/questions/58244999/how-to-access-a-specific-part-of-req-body-node-js
-app.use(bodyParser.urlencoded({ extended: true }))  // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({
+  extended: true
+})) // to support JSON-encoded bodies
 
 // enabling CORS for any unknown origin
 //the source for the cors header is : https://www.section.io/engineering-education/how-to-use-cors-in-nodejs-with-express/
 // and  https://rapidapi.com/guides/handle-cors-express
 
 app.use(cors({
-  
+
 }))
 
 
@@ -28,7 +33,7 @@ curl -v -X OPTIONS http://localhost:8000/
 */
 // a dictionary to store the items created
 items = {}
-  
+
 
 //Used for a human to know the service is working
 app.get('/', (req, res) => {
@@ -36,57 +41,54 @@ app.get('/', (req, res) => {
 })
 
 // filter user name: return all the items created by the same user otherwise return all items
-app.get('/items' ,(req,res)=>{
-  if(req.query.user_id)
-  {
-    res.status(200).json(Object.values(items).filter(i  => i.user_id == req.query.user_id)) //Allan helped in understanding how to use filter
+app.get('/items', (req, res) => {
+  if (req.query.user_id) {
+    res.status(200).json(Object.values(items).filter(i => i.user_id == req.query.user_id)) //Allan helped in understanding how to use filter
     return;
   }
   res.status(200).json(Object.values(items))
 })
 //get specific item by its id
-app.get('/item/:id',(req,res)=>{ 
+app.get('/item/:id', (req, res) => {
   if (Object.keys(items).includes(req.params.id)) //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
   {
     res.status(200)
-    res.json(items[req.params.id]) 
-  }
-  else
-  {
+    res.json(items[req.params.id])
+  } else {
     res.status(404).json("Item not found")
   }
 })
 
 //https://medium.com/@anshurajlive/read-dictionary-data-or-convert-dictionary-into-an-array-of-objects-in-javascript-e9c52286d746
-app.post('/item', (req,res)=>{
+app.post('/item', (req, res) => {
   if (!req.body.user_id || !req.body.description || !req.body.keywords || !req.body.lat || !req.body.lon) //check for required fields
   {
-    return res.status(405).json({message: 'there is missing fields'})
-  }
-  else{
-    ID=  Math.max( ...Object.keys(items)) +1; //find the max id 
-    if(ID == "-Infinity"){
-      ID= 0
+    return res.status(405).json({
+      message: 'there is missing fields'
+    })
+  } else {
+    ID = Math.max(...Object.keys(items)) + 1; //find the max id 
+    if (ID == "-Infinity") {
+      ID = 0
     }
-  req.body.id=ID;
-  req.body.date_from= new Date().toISOString().slice(0, 10) // https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
+    req.body.id = ID;
+    req.body.date_from = new Date().toISOString().slice(0, 10) // https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
 
-  items[ID]=req.body; 
-  res.status(201).json(items[ID])
-  console.log(items[ID])
+    items[ID] = req.body;
+    res.status(201).json(items[ID])
+    console.log(items[ID])
   }
 })
 // delete an item by it's id
-app.delete('/item/:id',(req,res)=>{
-  if ( Object.keys(items).includes(req.params.id)) //check if the requested id is in the list of items
+app.delete('/item/:id', (req, res) => {
+  if (Object.keys(items).includes(req.params.id)) //check if the requested id is in the list of items
   {
-    delete(items[req.params.id])    //https://www.tutorialspoint.com/Remove-elements-from-a-Dictionary-using-Javascript#:~:text=To%20remove%20an%20element%20from,it%20using%20the%20delete%20operator.
+    delete(items[req.params.id]) //https://www.tutorialspoint.com/Remove-elements-from-a-Dictionary-using-Javascript#:~:text=To%20remove%20an%20element%20from,it%20using%20the%20delete%20operator.
     res.status(204).json("OK")
     console.log("item deleted", items)
     console.log(items)
 
-  }
-  else{ 
+  } else {
     res.status(404).json("Item not found")
   }
 
@@ -101,7 +103,9 @@ app.listen(port, () => {
 })
 
 // Docker container exit handler - https://github.com/nodejs/node/issues/4182
-process.on('SIGINT', function() {process.exit()})
+process.on('SIGINT', function () {
+  process.exit()
+})
 
 //https://github.com/calaldees/frameworks_and_languages_module/blob/main/docs/assignment_hints.md
 //https://www.digitalocean.com/community/tutorials/nodejs-req-object-in-expressjs

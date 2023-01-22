@@ -26,8 +26,8 @@ run_example_server:  ##
 #	${DOCKER_COMPOSE_TEST} up --build
 #	${DOCKER_COMPOSE_TEST} down
 test_server:  ##
-	${DOCKER_COMPOSE_TEST} up --build test_server
-	${DOCKER_COMPOSE_TEST} down
+	pip install requests pytest pytest-html
+	pytest ./test_server/test_api.py
 test_client:  ##
 	${DOCKER_COMPOSE_TEST} up --build test_client
 	${DOCKER_COMPOSE_TEST} down
